@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package proyectopo;
 import java.io.*;
 import java.util.*;
@@ -7,7 +12,7 @@ import java.util.*;
  * @author Pizza Dude
  */
 public class Files {
-    public void saveMap(String nombre, HashMap hmap){
+    public void saveMap(String nombre, Map hmap){
         try{
             FileOutputStream fOut = new FileOutputStream(nombre);
             ObjectOutputStream out = new ObjectOutputStream(fOut);
@@ -17,11 +22,12 @@ public class Files {
             out.close();
             fOut.close();
         }catch(IOException e){
+            e.printStackTrace();
             System.out.println("Error");
         }
     }
-    public Map getMap(String nombre){
-        Map map = null;
+    public HashMap getMap(String nombre){
+        HashMap map = null;
         try {
             FileInputStream fInput = new FileInputStream(nombre);
             ObjectInputStream input = new ObjectInputStream(fInput);
