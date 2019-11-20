@@ -3,50 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package proyectopo;
-
+package proyectopoo;
 import java.util.*;
-
 /**
  *
- * @author Pizza Dude
+ * @author essmo
  */
 public class LiderProyecto extends Desarrollador{
     private Map<String,Tarea> tareasMonitoreadas;
 
-    public LiderProyecto(String usuario, char[] password) {
+    public LiderProyecto(String usuario, String password) {
         super(usuario, password);
+        tareasMonitoreadas = new HashMap<String,Tarea>();        
+    }
+    /*public void crearTarea(int estado, String nombre, Desarrollador usuario){    
+        Tarea tarea = new Tarea(estado,this,nombre,usuario);
+        tareasMonitoreadas.put(nombre, tarea);
+    }*/
+    public Tarea crearTarea(String nombre, String descripcion){    
+        Tarea tarea = new Tarea(nombre,descripcion);
         Files f = new Files();
-        //Se lee el archivo que guarda a la base de datos de los usuarios
-        Map<String,Desarrollador> bUsuarios = f.getMap("usuarios.ser"); 
-        
-        if(!bUsuarios.containsKey(usuario)){
-            tareasMonitoreadas = new HashMap<String,Tarea>();
-            bUsuarios.put(usuario, this); //Si el usuario no existe lo crea
-        }else{
-            LiderProyecto hola = (LiderProyecto)bUsuarios.get(usuario); //Si ya existe carga sus tareas
-        }
-        
-        //Se vuelve a guardar "usuarios" a un archivo
-        f.saveMap("usuarios.ser", bUsuarios);
-    }
-    public void crearTarea(int estado, String nombre, Map<String,Desarrollador> usuarios){    
-        Tarea tarea = new Tarea(estado,this,nombre,usuarios);
-        tareasMonitoreadas.put(nombre, tarea);
-    }
-    public void crearTarea(int estado, String nombre, String descripcion, Map<String,Desarrollador> usuarios){    
-        Tarea tarea = new Tarea(estado,this,nombre,descripcion,usuarios);
-        tareasMonitoreadas.put(nombre, tarea);
+        Map<String,Desarrollador> bUsuarios = f.getMap("users.ser");
+        Desarrollador user = bUsuarios.get("Administrador");
+        user.setTarea(tarea);
+        //f.saveMap("users.ser", bUsuarios);
+        return tarea;
     }
     public void eliminarTarea(String nombre){
         tareasMonitoreadas.remove(nombre);
+        Files f = new Files();
+        HashMap map = f.getMap("users.ser");
+        map.remove(nombre);
+        f.saveMap("users.ser", map);
     }
-    public void setTarea(int estado, String lider, String nombreAct, String nombreNew, Map<String,Desarrollador> usuarios){
-        Tarea tarea = tareasMonitoreadas.get(nombreAct);
-        tarea.setEstado(estado);
-        tarea.setNombre(nombreNew);
-        tarea.setUsuarios(usuarios);
-        tareasMonitoreadas.remove(nombreAct);
-        tareasMonitoreadas.put(nombreNew, tarea);
+    public void asignarTarea(String desarrollador, Tarea tarea){
+        Files f = new Files();
+        Map<String,Desarrollador> bUsuarios = f.getMap("users.ser");
+        Desarrollador user = bUsuarios.get(desarrollador);
+        user.setTarea(tarea);
+        //f.saveMap("users.ser", bUsuarios);
     }
+    /*public HashMap getTareas(){
+        Files f = new Files();
+        Map<String,Desarrollador> bUsuarios = f.getMap("users.ser");
+        LiderProyecto user = (LiderProyecto) bUsuarios.get("Administrador");
+        return user.getTareas();
+    }*/
 }

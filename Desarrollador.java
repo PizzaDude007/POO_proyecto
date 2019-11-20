@@ -3,55 +3,43 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package proyectopo;
-
+package proyectopoo;
 import java.util.*;
-
 /**
  *
- * @author Pizza Dude
+ * @author essmo
  */
-public class Desarrollador implements java.io.Serializable{
+public class Desarrollador implements java.io.Serializable {
     private String usuario;
-    private char[] password;
-    private Map<String,Tarea> tareas = new HashMap<String,Tarea>();
+    private String password;
+    private Map<String,Tarea> tareas;
     
-    public Desarrollador(String usuario, char[] password){
-        Files f = new Files();
-        //Se lee el archivo que guarda a la base de datos de los usuarios
-        Map<String,Desarrollador> bUsuarios = f.getMap("usuarios.ser"); 
+    public Desarrollador(String usuario, String password){
         this.usuario = usuario;
         this.password = password;
-        
-        if(!bUsuarios.containsKey(usuario)){
-            bUsuarios.put(usuario, this); //Si el usuario no existe lo crea
-        }else{
-            this.tareas = bUsuarios.get(usuario).tareas; //Si ya existe carga sus tareas
-        }
-        
-        //Se vuelve a guardar "usuarios" a un archivo
-        f.saveMap("usuarios.ser", bUsuarios); 
+        tareas = new HashMap<>();
     }
-    public void setEstado(int estado, String nombre){
-        Tarea tarea = tareas.get(nombre);
-        tarea.setEstado(estado);
-        
+    public void setTarea(Tarea tarea){
+        this.tareas.put(tarea.getNombre(), tarea);
+        actualizarArchivo();
+    }
+    public void setTarea(Tarea tarea, String nombre){
+        this.tareas.put(nombre, tarea);
         actualizarArchivo();
     }
     public void setUsuario(String usuario){
         this.usuario = usuario;
-        
         actualizarArchivo();
     }
-    public String getUsuaraio(){
+    public String getUsuario(){
         return usuario;
     }
-    public void setPassword(char[] password){
+    public void setPassword(String password){
         this.password = password;
         
         actualizarArchivo();
     }
-    public char[] getPassword(){
+    public String getPassword(){
         return password;
     }
     public Map getTareas(){
@@ -60,10 +48,10 @@ public class Desarrollador implements java.io.Serializable{
     
     private void actualizarArchivo(){
         Files f = new Files();
-        Map<String,Desarrollador> bUsuarios = f.getMap("usuarios.ser"); 
+        Map<String,Desarrollador> bUsuarios = f.getMap("users.ser"); 
         
         bUsuarios.replace(usuario, this);
         
-        f.saveMap("usuarios.ser", bUsuarios);
+        f.saveMap("users.ser", bUsuarios);
     }
 }
